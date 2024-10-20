@@ -29,7 +29,13 @@
 </head>
 <body ng-controller="MiControlador">
     <h1>Películas</h1>
+    <label for="categoria">Selecciona una categoría:</label>
+    <select id="categoria" ng-model="categoriaSeleccionada">
+        <option value="">-- Seleccionar --</option>
+        <option ng-repeat="categoria in categorias" ng-value="categoria">{{categoria}}</option>
+    </select>
 
+    <button ng-click="buscarPorCategoria()">Buscar</button>
     <ul>
         <li ng-repeat="pelicula in peliculas">
             <strong>{{pelicula.pe_nombre}}</strong> - {{pelicula.pe_descripcion}}<br>
