@@ -57,6 +57,23 @@ app.controller('CrearUsuarioController', ['$scope', '$http', function ($scope, $
     };
 }]);
 
+app.controller('ConsultaUsers', ['$scope', '$http', function ($scope, $http) {
+    $scope.Usuarios = [];
+
+    $scope.ConsultarUsuarios = function () {
+
+        $http.get('https://localhost:7008/api/UsuariosControlador/ConsultarUsers')
+            .then(function (response) {
+                $scope.Usuarios = response.data.value;
+                console.log("Respuesta del servidor:", response);
+            }, function (error) {
+                console.error("Error al Consultar Usuarios:", error);
+            });
+    };
+
+    $scope.ConsultarUsuarios();
+}]);
+
 app.controller('LoginController', ['$scope', '$http', function ($scope, $http) {
     $scope.loginData = {
         Usuario: '',

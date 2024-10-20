@@ -45,7 +45,7 @@ namespace API_Peliculas.Controllers
         [HttpGet]
         public IActionResult ConsultarUsers()
         {
-            var resultado = _context.pe_users.ToList();
+            var resultado = _context.pe_users.Select(p => new { p.us_usuario,p.us_mail,p.us_preferencia }).ToList();
 
             return new JsonResult(Ok(resultado));
         }
