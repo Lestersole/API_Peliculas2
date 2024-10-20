@@ -50,5 +50,27 @@ namespace API_Peliculas.Controllers
 
             return new JsonResult(Ok(resultado));
         }
+        [HttpGet]
+        public IActionResult GetPreferenciasUsuario( string usuario)
+        {
+            var resultado = _context.pe_users
+                                .Where(p => p.us_usuario == usuario)
+                                .Select(p => p.us_preferencia)
+                                .ToList();
+
+            if (resultado == null || !resultado.Any())
+                return new JsonResult(NotFound());
+
+            var peliculas = _context.pe_peliculas
+                .Where(p => resultado.Contains(p.pe_categoria1) ||
+                            resultado.Contains(p.pe_categoria2) ||
+                            resultado.Contains(p.pe_categoria3))
+                .ToList();
+
+            if (peliculas == null || !peliculas.Any())
+                return new JsonResult(NotFound());
+
+            return new JsonResult(Ok(peliculas));
+        }
     }
 }

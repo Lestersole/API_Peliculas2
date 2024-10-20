@@ -15,10 +15,6 @@ app.controller('MiControlador', ['$scope', '$http', function ($scope, $http) {
             });
     };
 
-    $scope.cargarUsuarios = function () {
-        $http.get
-    }
-
     $scope.buscarPorCategoria = function () {
         if ($scope.categoriaSeleccionada) {
             $http.get('https://localhost:7008/api/PeliculasControlador/GetCategoria?categoria=' + $scope.categoriaSeleccionada)
@@ -33,6 +29,8 @@ app.controller('MiControlador', ['$scope', '$http', function ($scope, $http) {
 
 
     $scope.cargarPeliculas();
+
+
 }]);
 
 app.controller('CrearUsuarioController', ['$scope', '$http', function ($scope, $http) {
@@ -78,11 +76,39 @@ app.controller('LoginController', ['$scope', '$http', function ($scope, $http) {
             });
     };
     $scope.logout = function () {
-        //POS: Poner logica para eliminar el cookie o algo
-        $scope.isLoggedIn = false; // Cambia el estado de inicio de sesión
-        $scope.loggedInUser = ''; // Limpia el nombre de usuario
-        alert('Has cerrado sesión');
-        // Opcional: redirige a la página de inicio o de login
-        window.location.href = '/login.html'; // Ajusta la ruta según sea necesario
+        // Hacer una solicitud al backend para eliminar la cookie de sesión
+        $http.post('https://localhost:7008/api/UsuariosControlador/Logout')
+            .then(function (response) {
+                // Borrar la información del localStorage
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('username');
+
+                // Cambiar el estado de inicio de sesión en el frontend
+                $scope.isLoggedIn = false;
+                $scope.loggedInUser = '';
+
+                // Mostrar un mensaje de confirmación
+                alert('Has cerrado sesión');
+
+                // Redirigir a la página de login u otra página según sea necesario
+                window.location.href = '/index.html';
+            }, function (error) {
+                console.error('Error cerrando sesión:', error);
+            });
     };
+    // Fetch user-specific movies if logged in
+    if ($scope.isLoggedIn) {
+        $scope.cargarPeliculasPreferidas = function () {
+            $http.get('https://localhost:7008/api/PeliculasControlador/GetPreferenciasUsuario?usuario=' + $scope.loggedInUser)
+                .then(function (response) {
+                    $scope.peliculasPreferidas = response.data.value;  // Store user's preferred movies
+                    console.log("Películas preferidas del usuario cargadas:", $scope.peliculasPreferidas);
+                }, function (error) {
+                    console.error("Error al cargar las películas preferidas:", error);
+                });
+        };
+
+        // Load user preferences on page load if logged in
+        $scope.cargarPeliculasPreferidas();
+    }
 }]);

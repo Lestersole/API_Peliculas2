@@ -61,7 +61,8 @@ namespace API_Peliculas.Controllers
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, user.us_usuario),
-                    new Claim(ClaimTypes.NameIdentifier, user.us_id.ToString())
+                    new Claim(ClaimTypes.NameIdentifier, user.us_id.ToString()),
+                    new Claim(ClaimTypes.Name, user.us_preferencia)
                 };
 
                 // Crear las caracteristicas principales de autenticación
@@ -84,7 +85,7 @@ namespace API_Peliculas.Controllers
         }
         //Pense que seria mas dificil este
         //POS:Ver si deja rastro en la cookie
-        [HttpPost("Logout")]
+        [HttpPost]
         public IActionResult Logout()
         {
             HttpContext.SignOutAsync("CookieAuth");

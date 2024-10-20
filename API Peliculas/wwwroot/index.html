@@ -80,5 +80,15 @@
             Duración: {{pelicula.pe_duracion}}
         </li>
     </ul>
+    <div ng-controller="LoginController">
+        <ul ng-if="isLoggedIn">
+            <h2>Películas sugeridas para {{ loggedInUser }}</h2>
+            <li ng-repeat="pelicula in peliculasPreferidas">
+                <strong>{{pelicula.pe_nombre}}</strong> - {{pelicula.pe_descripcion}}<br>
+                Categoría: {{pelicula.pe_categoria1}}<span ng-if="pelicula.pe_categoria2">, {{pelicula.pe_categoria2}}</span><span ng-if="pelicula.pe_categoria3">, {{pelicula.pe_categoria3}}</span> <br>
+                Duración: {{pelicula.pe_duracion}}
+            </li>
+        </ul>
+    </div>
 </body>
 </html>
