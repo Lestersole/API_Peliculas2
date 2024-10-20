@@ -47,6 +47,8 @@ namespace API_Peliculas.Controllers
 
             return new JsonResult(Ok(resultado));
         }
+
+
         
     }
 

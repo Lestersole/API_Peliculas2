@@ -3,6 +3,23 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Agregar el servicio de sesión
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Duración de la sesión
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true; // Necesario para mantener la sesión en GDPR
+});
+
+// Agregar la autenticación por cookies
+builder.Services.AddAuthentication("CookieAuth")
+    .AddCookie("CookieAuth", config =>
+    {
+        config.Cookie.Name = "UserLoginCookie"; // Nombre de la cookie
+        config.LoginPath = "/UsuariosControlador/Login"; // Ruta para iniciar sesión
+        config.AccessDeniedPath = "/UsuariosControlador/AccessDenied"; // Ruta de acceso denegado
+    });
+
 // Add services to the container.
 builder.Services.AddDbContext<APIContext>(opciones => opciones.UseSqlServer(builder.Configuration.GetConnectionString("ConexionSql")));
 builder.Services.AddControllers();
