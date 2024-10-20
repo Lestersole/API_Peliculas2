@@ -1,7 +1,7 @@
 ﻿var app = angular.module('miApp', []);
 
 app.controller('MiControlador', ['$scope', '$http', function ($scope, $http) {
-    $scope.categorias = ["Accion", "Comedia", "Drama", "Terror"];
+    $scope.categorias = ["Todas","Accion", "Comedia", "Drama", "Terror"];
     $scope.peliculas = [];
     $scope.categoriaSeleccionada = "";
 
@@ -17,7 +17,12 @@ app.controller('MiControlador', ['$scope', '$http', function ($scope, $http) {
 
     $scope.buscarPorCategoria = function () {
         if ($scope.categoriaSeleccionada) {
+            if ($scope.categoriaSeleccionada == "Todas") {
+                $scope.cargarPeliculas();
+                return;
+            }
             $http.get('https://localhost:7008/api/PeliculasControlador/GetCategoria?categoria=' + $scope.categoriaSeleccionada)
+            
             .then(function (response) {
                 $scope.peliculas = response.data.value;
                 console.log("Películas cargadas:", $scope.peliculas);
