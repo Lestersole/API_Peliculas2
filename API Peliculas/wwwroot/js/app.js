@@ -53,3 +53,36 @@ app.controller('CrearUsuarioController', ['$scope', '$http', function ($scope, $
             });
     };
 }]);
+
+app.controller('LoginController', ['$scope', '$http', function ($scope, $http) {
+    $scope.loginData = {
+        Usuario: '',
+        Pass: ''
+    };
+    // Verificar si el usuario está almacenado en localStorage
+    $scope.isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    $scope.loggedInUser = localStorage.getItem('username') || '';
+
+    $scope.login = function () {
+        $http.post('https://localhost:7008/api/UsuariosControlador/Login', $scope.loginData)
+            .then(function (response) {
+                $scope.isLoggedIn = true; // Usuario ha iniciado sesión
+                $scope.loggedInUser = $scope.loginData.Usuario; // Almacena el nombre de usuario
+                localStorage.setItem('isLoggedIn', 'true'); // Guardar el estado de sesión
+                localStorage.setItem('username', $scope.loginData.Usuario); // Guardar el nombre de usuario
+                alert('Login exitoso');
+                // Puedes redirigir a otra página si el login es exitoso
+                window.location.href = '/index.html';
+            }, function (error) {
+                alert('Error en el login: ' + error.data);
+            });
+    };
+    $scope.logout = function () {
+        //POS: Poner logica para eliminar el cookie o algo
+        $scope.isLoggedIn = false; // Cambia el estado de inicio de sesión
+        $scope.loggedInUser = ''; // Limpia el nombre de usuario
+        alert('Has cerrado sesión');
+        // Opcional: redirige a la página de inicio o de login
+        window.location.href = '/login.html'; // Ajusta la ruta según sea necesario
+    };
+}]);

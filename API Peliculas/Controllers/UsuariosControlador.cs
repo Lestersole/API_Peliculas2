@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using API_Peliculas.Models;
 using API_Peliculas.Data;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
 
 namespace API_Peliculas.Controllers
 {
@@ -48,8 +50,47 @@ namespace API_Peliculas.Controllers
             return new JsonResult(Ok(resultado));
         }
 
+        [HttpPost]
+        public IActionResult Login([FromBody] MLogin loginData)
+        {
+            var user = _context.pe_users.SingleOrDefault(u => u.us_usuario == loginData.Usuario && u.us_pass == loginData.Pass);
 
-        
+            if(user != null)
+            {
+                //Crea la informacion del usuario
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name, user.us_usuario),
+                    new Claim(ClaimTypes.NameIdentifier, user.us_id.ToString())
+                };
+
+                // Crear las caracteristicas principales de autenticación
+                var claimsIdentity = new ClaimsIdentity(claims, "CookieAuth");
+                var authProperties = new AuthenticationProperties
+                {
+                    IsPersistent = true, // La sesión será persistente
+                    ExpiresUtc = DateTime.UtcNow.AddMinutes(30) // Tiempo de expiración(esta en utc porque no queria buscar como poner otra)
+                };
+
+                // Autenticar al usuario
+                HttpContext.SignInAsync("CookieAuth", new ClaimsPrincipal(claimsIdentity), authProperties);
+
+                return Ok("Login exitoso");
+            }
+            else
+            {
+                return Unauthorized("Credenciales incorrectas");
+            }
+        }
+        //Pense que seria mas dificil este
+        //POS:Ver si deja rastro en la cookie
+        [HttpPost("Logout")]
+        public IActionResult Logout()
+        {
+            HttpContext.SignOutAsync("CookieAuth");
+            return Ok("Sesión cerrada correctamente");
+        }
+
     }
 
 }

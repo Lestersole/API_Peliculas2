@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Configurar caché en memoria para sesiones
+builder.Services.AddDistributedMemoryCache();
 // Agregar el servicio de sesión
 builder.Services.AddSession(options =>
 {
@@ -49,9 +51,12 @@ if (app.Environment.IsDevelopment())
 app.UseCors("PermitirAngular");
 
 app.UseStaticFiles();
+// Usar sesiones
+app.UseSession();
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
