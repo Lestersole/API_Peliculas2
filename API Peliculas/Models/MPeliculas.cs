@@ -9,6 +9,9 @@ namespace API_Peliculas.Models
         public string pe_nombre { get; set; }
         public string pe_descripcion { get; set; }
         public string pe_categoria1 { get; set; }
+
+        public string? pe_categoria2 { get; set; }
+        public string? pe_categoria3 { get; set; }
         public TimeOnly pe_duracion { get; set; }
 
 

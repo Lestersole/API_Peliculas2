@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+<html lang="es" ng-app="miApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Películas</title>
+    <!-- Incluir AngularJS desde el CDN -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <!-- Incluir tu script personalizado -->
+    <script src="js/app.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            padding: 8px;
+            margin: 4px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body ng-controller="MiControlador">
+    <h1>Películas</h1>
+
+    <ul>
+        <li ng-repeat="pelicula in peliculas">
+            <strong>{{pelicula.pe_nombre}}</strong> - {{pelicula.pe_descripcion}}<br>
+            Categoría: {{pelicula.pe_categoria1}}<span ng-if="pelicula.pe_categoria2">, {{pelicula.pe_categoria2}}</span><span ng-if="pelicula.pe_categoria3">, {{pelicula.pe_categoria3}}</span> <br>
+            Duración: {{pelicula.pe_duracion}}
+        </li>
+    </ul>
+</body>
+</html>
